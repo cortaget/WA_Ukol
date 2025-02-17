@@ -5,7 +5,6 @@ on:
     branches:
       - master
 
-
 jobs:
   build:
     runs-on: windows-latest
@@ -22,20 +21,26 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 4) Build projektu
+      # 4) Spuštění unit testů (Vitest)
+      - name: Run tests
+        run: npm test
+        continue-on-error: false  # Pokud testy selžou, workflow se zastaví
+
+      # 5) Build projektu
       - name: Build
         run: npm run build
 
-      # 5) Nastavení GitHub Pages
+      # 6) Nastavení GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      # 6) Výsledek uploadneme
+      # 7) Výsledek uploadneme
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Cesta, kde se po buildu vytvoří výsledný projekt
           path: ./dist
+
   deploy:
     permissions:
       contents: read
